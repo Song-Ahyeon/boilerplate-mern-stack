@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react'
 import { FaCode } from "react-icons/fa";
 import { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config';
 import MainImage from './Section/MainImage';
+import GridCards from '../commons/GridCards';
+import {Row} from 'antd';
 
 function LandingPage() {
     const [page, setPage] = useState(1);
@@ -15,7 +17,8 @@ function LandingPage() {
         fetch(endPoint)
         .then(res => res.json())
         .then(res => {
-            setMovies([res.results])
+            setMovies(res.results)
+            // setMovies([res.results])
             setTotalPages(res.total_pages)
             setMainMovieImage(res.results[0])
         })
@@ -35,6 +38,19 @@ function LandingPage() {
                 <h2>by latest</h2>
                 <hr />
                 <h3>total_pages: {totalPages}</h3>
+
+                {/* Movie Grid Cards */}
+                <Row gutter={[16, 16]}>
+                    {movies && movies.map((movie, index) => (
+                    <React.Fragment key={index}>
+                        <GridCards image={movie.poster_path ? 
+                        `${IMAGE_BASE_URL}w500${movie.poster_path}` : null}
+                        movieId={movie.id}
+                        movieName={movie.title}
+                        />
+                    </React.Fragment>
+                    ))}
+                </Row>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <button>Load More</button>
