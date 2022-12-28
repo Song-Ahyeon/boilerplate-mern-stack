@@ -14,15 +14,26 @@ function LandingPage() {
     useEffect(() => {
                                                                             // en-US
         const endPoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=${page}`
+        fetchMovies(endPoint)
+    }, [])
+
+    const fetchMovies = (endPoint) => {
         fetch(endPoint)
         .then(res => res.json())
         .then(res => {
-            setMovies(res.results)
-            // setMovies([res.results])
+            setMovies([...movies, ...res.results])
             setTotalPages(res.total_pages)
             setMainMovieImage(res.results[0])
+            setPage(res.page)
         })
-    }, [])
+    }
+
+    const loadMoreItems = () => {
+        console.log(page)
+        const endPoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=ko&page=${page+1}`
+        fetchMovies(endPoint)
+    }
+
     return (
         <div style={{width: '100%', margin: '0'}}>
             {/* Main Image */}
@@ -53,7 +64,7 @@ function LandingPage() {
                 </Row>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
-                <button>Load More</button>
+                <button onClick={loadMoreItems}>Load More</button>
             </div>
 
         </div>
